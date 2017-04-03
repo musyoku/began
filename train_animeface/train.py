@@ -37,6 +37,8 @@ def main():
 		cuda.cupy.random.seed(args.seed)
 
 	# training
+	kt = 0
+	lambda_k = 0.001 
 	progress = Progress()
 	for epoch in xrange(1, max_epoch + 1):
 		progress.start_epoch(epoch, max_epoch)
