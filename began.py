@@ -132,7 +132,7 @@ class BEGAN():
 
 	def generate_x_from_z(self, z, test=False, as_numpy=False):
 		z = self.to_variable(z)
-		x, _ = self.generator(z, test=test, return_activations=True)
+		x = self.generator(z, test=test)
 		if as_numpy:
 			return self.to_numpy(x)
 		return x
@@ -171,5 +171,5 @@ class BEGAN():
 			os.mkdir(model_dir)
 		except:
 			pass
-		self.chain_discriminator.save(model_dir + "/chain_discriminator.hdf5")
+		self.chain_discriminator.save(model_dir + "/discriminator.hdf5")
 		self.chain_generator.save(model_dir + "/generator.hdf5")

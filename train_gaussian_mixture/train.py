@@ -9,13 +9,24 @@ from model import params, began
 from args import args
 from plot import plot_kde, plot_scatter
 
-def plot_samples(epoch, progress):
-	samples_fake = began.generate_x(10000, from_gaussian=True)
-	samples_fake.unchain_backward()
-	samples_fake = began.to_numpy(samples_fake)
+def plot_generator(epoch, progress):
+	x = began.generate_x(10000, test=True)
+	x.unchain_backward()
+	x = began.to_numpy(x)
 	try:
-		plot_scatter(samples_fake, dir=args.plot_dir, filename="scatter_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
-		plot_kde(samples_fake, dir=args.plot_dir, filename="kde_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
+		plot_scatter(x, dir=args.plot_dir, filename="generator_scatter_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
+		plot_kde(x, dir=args.plot_dir, filename="generator_kde_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
+	except:
+		pass
+
+def plot_reconstruction(epoch, progress, x):
+	z = began.encode(x, test=True)
+	x = began.decode(z, test=True)
+	x.unchain_backward()
+	x = began.to_numpy(x)
+	try:
+		plot_scatter(x, dir=args.plot_dir, filename="reconstruction_scatter_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
+		plot_kde(x, dir=args.plot_dir, filename="reconstruction_kde_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
 	except:
 		pass
 
@@ -37,7 +48,7 @@ def main():
 	kt = 0
 	lambda_k = 0.001 
 	progress = Progress()
-	plot_samples(0, progress)
+	plot_generator(0, progress)
 	for epoch in xrange(1, max_epoch + 1):
 		progress.start_epoch(epoch, max_epoch)
 		sum_loss_d = 0
@@ -81,7 +92,8 @@ def main():
 		})
 
 		if epoch % plot_interval == 0 or epoch == 1:
-			plot_samples(epoch, progress)
+			plot_generator(epoch, progress)
+			plot_reconstruction(epoch, progress, sampler.gaussian_mixture_circle(10000, config.num_mixture, scale=scale, std=0.2))
 
 if __name__ == "__main__":
 	main()
