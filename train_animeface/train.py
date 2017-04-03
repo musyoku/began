@@ -57,8 +57,8 @@ def main():
 			loss_d = loss_real - kt * loss_fake
 			loss_g = loss_fake
 
-			began.backprop_generator(loss_d)
-			began.backprop_discriminator(loss_g)
+			began.backprop_discriminator(loss_d)
+			began.backprop_generator(loss_g)
 
 			sum_loss_d += float(loss_d.data)
 			sum_loss_g += float(loss_g.data)

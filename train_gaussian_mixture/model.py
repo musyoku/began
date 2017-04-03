@@ -6,7 +6,7 @@ from chainer import cuda
 sys.path.append(os.path.split(os.getcwd())[0])
 from began import BEGAN, Config
 from sequential import Sequential
-from sequential.layers import Linear
+from sequential.layers import Linear, BatchNormalization
 from sequential.functions import Activation
 
 # load params.json
