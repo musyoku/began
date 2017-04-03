@@ -60,19 +60,16 @@ class BEGAN():
 		self.chain_generator = sequential.chain.Chain(weight_initializer=self.config.weight_initializer, weight_std=self.config.weight_std)
 
 		# add decoder
-		decoder = sequential.from_dict(self.params["decoder"])
-		self.chain_discriminator.add_sequence_with_name(decoder, "decoder")
-		self.decoder = decoder
+		self.decoder = sequential.from_dict(self.params["decoder"])
+		self.chain_discriminator.add_sequence_with_name(self.decoder, "decoder")
 
 		# add encoder
-		encoder = sequential.from_dict(self.params["encoder"])
-		self.chain_discriminator.add_sequence_with_name(encoder, "encoder")
-		self.encoder = encoder
+		self.encoder = sequential.from_dict(self.params["encoder"])
+		self.chain_discriminator.add_sequence_with_name(self.encoder, "encoder")
 
 		# add generator
-		generator = sequential.from_dict(self.params["generator"])
-		self.chain_generator.add_sequence_with_name(generator, "generator")
-		self.generator = generator
+		self.generator = sequential.from_dict(self.params["generator"])
+		self.chain_generator.add_sequence_with_name(self.generator, "generator")
 
 		# setup optimizer
 		self.chain_discriminator.setup_optimizers(self.config.optimizer, self.config.learning_rate, self.config.momentum)

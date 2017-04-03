@@ -49,6 +49,8 @@ def main():
 	lambda_k = 0.001 
 	progress = Progress()
 	plot_generator(0, progress)
+	sum_loss_real_over_epoch = 0
+	sum_loss_fake_over_epoch = 0
 	for epoch in xrange(1, max_epoch + 1):
 		progress.start_epoch(epoch, max_epoch)
 		sum_loss_d = 0
@@ -69,16 +71,27 @@ def main():
 			began.backprop_discriminator(loss_d)
 			began.backprop_generator(loss_g)
 
-			sum_loss_d += float(loss_d.data)
-			sum_loss_g += float(loss_g.data)
-
+			loss_d = float(loss_d.data)
+			loss_g = float(loss_g.data)
 			loss_real = float(loss_real.data)
 			loss_fake = float(loss_fake.data)
 
-			gamma = loss_fake / loss_real
+			sum_loss_d += loss_d
+			sum_loss_g += loss_g
+			sum_loss_real_over_epoch += loss_real
+			sum_loss_fake_over_epoch += loss_fake
+
+			E_loss_real = sum_loss_real_over_epoch / epoch
+			E_loss_fake = sum_loss_fake_over_epoch / epoch
+
+			gamma = E_loss_fake / E_loss_real
+			gamma = max(0, min(1, gamma))
 			kt += lambda_k * (gamma * loss_real - loss_fake)
+			kt = max(0, min(1, kt))
 			M = loss_real + abs(gamma * loss_real - loss_fake)
 			sum_M += M
+
+			print loss_real, loss_fake
 
 			if t % 10 == 0:
 				progress.show(t, num_updates_per_epoch, {})

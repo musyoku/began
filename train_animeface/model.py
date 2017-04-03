@@ -31,7 +31,7 @@ else:
 
 	config = Config()
 	config.ndim_z = ndim_z
-	config.weight_std = 0.01
+	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
 	config.nonlinearity = "elu"
 	config.optimizer = "adam"

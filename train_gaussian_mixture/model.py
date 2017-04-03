@@ -28,7 +28,7 @@ else:
 	config = Config()
 	config.num_mixture = args.num_mixture
 	config.ndim_z = 50
-	config.weight_std = 0.1
+	config.weight_std = 0.01
 	config.weight_initializer = "Normal"
 	config.nonlinearity = "elu"
 	config.optimizer = "adam"
