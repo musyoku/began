@@ -30,37 +30,38 @@ else:
 	config.ndim_z = 50
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
-	config.nonlinearity = "elu"
+	config.nonlinearity_d = "leaky_relu"
+	config.nonlinearity_g = "relu"
 	config.optimizer = "adam"
 	config.learning_rate = 0.0001
-	config.momentum = 0.5
+	config.momentum = 0.1
 	config.gradient_clipping = 1
 	config.weight_decay = 0
 
 	encoder = Sequential()
 	encoder.add(Linear(2, 128))
-	encoder.add(Activation(config.nonlinearity))
+	encoder.add(Activation(config.nonlinearity_d))
 	# encoder.add(BatchNormalization(128))
 	encoder.add(Linear(None, 128))
-	encoder.add(Activation(config.nonlinearity))
+	encoder.add(Activation(config.nonlinearity_d))
 	# encoder.add(BatchNormalization(128))
 	encoder.add(Linear(None, config.ndim_z))
 
 	decoder = Sequential()
 	decoder.add(Linear(config.ndim_z, 128))
-	decoder.add(Activation(config.nonlinearity))
+	decoder.add(Activation(config.nonlinearity_d))
 	# decoder.add(BatchNormalization(128))
 	decoder.add(Linear(None, 128))
-	decoder.add(Activation(config.nonlinearity))
+	decoder.add(Activation(config.nonlinearity_d))
 	# decoder.add(BatchNormalization(128))
 	decoder.add(Linear(None, 2))
 
 	generator = Sequential()
 	generator.add(Linear(config.ndim_z, 128))
-	generator.add(Activation(config.nonlinearity))
+	generator.add(Activation(config.nonlinearity_g))
 	# generator.add(BatchNormalization(128))
 	generator.add(Linear(None, 128))
-	generator.add(Activation(config.nonlinearity))
+	generator.add(Activation(config.nonlinearity_g))
 	# generator.add(BatchNormalization(128))
 	generator.add(Linear(None, 2))
 

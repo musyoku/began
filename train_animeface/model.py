@@ -33,7 +33,8 @@ else:
 	config.ndim_z = ndim_z
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
-	config.nonlinearity = "elu"
+	config.nonlinearity_d = "leaky_relu"
+	config.nonlinearity_g = "relu"
 	config.optimizer = "adam"
 	config.learning_rate = 0.0001
 	config.momentum = 0.5
@@ -44,19 +45,35 @@ else:
 	encoder = Sequential()
 	encoder.add(Convolution2D(3, channels, ksize=4, stride=2, pad=1))
 	# encoder.add(BatchNormalization(channels))
-	encoder.add(Activation(config.nonlinearity))
+	encoder.add(Activation(config.nonlinearity_d))
 	encoder.add(Convolution2D(channels, 2 * channels, ksize=4, stride=2, pad=1))
 	# encoder.add(BatchNormalization(2 * channels))
-	encoder.add(Activation(config.nonlinearity))
+	encoder.add(Activation(config.nonlinearity_d))
 	encoder.add(Convolution2D(2 * channels, 3 * channels, ksize=4, stride=2, pad=1))
 	# encoder.add(BatchNormalization(3 * channels))
-	encoder.add(Activation(config.nonlinearity))
+	encoder.add(Activation(config.nonlinearity_d))
 	encoder.add(Convolution2D(3 * channels, 4 * channels, ksize=4, stride=2, pad=1))
 	# encoder.add(BatchNormalization(4 * channels))
-	encoder.add(Activation(config.nonlinearity))
+	encoder.add(Activation(config.nonlinearity_d))
 	encoder.add(Linear(None, ndim_z))
 
 	projection_size = 6
+
+	# Decoder
+	decoder = Sequential()
+	decoder.add(Linear(ndim_z, channels * projection_size ** 2))
+	# decoder.add(BatchNormalization(channels * projection_size ** 2))
+	decoder.add(reshape((-1, channels, projection_size, projection_size)))
+	decoder.add(PixelShuffler2D(channels, channels, r=2))
+	# decoder.add(BatchNormalization(channels))
+	decoder.add(Activation(config.nonlinearity_d))
+	decoder.add(PixelShuffler2D(channels, channels, r=2))
+	# decoder.add(BatchNormalization(channels))
+	decoder.add(Activation(config.nonlinearity_d))
+	decoder.add(PixelShuffler2D(channels, channels, r=2))
+	# decoder.add(BatchNormalization(channels))
+	decoder.add(Activation(config.nonlinearity_d))
+	decoder.add(PixelShuffler2D(channels, 3, r=2))
 
 	# Generator
 	generator = Sequential()
@@ -65,30 +82,14 @@ else:
 	generator.add(reshape((-1, channels, projection_size, projection_size)))
 	generator.add(PixelShuffler2D(channels, channels, r=2))
 	# generator.add(BatchNormalization(channels))
-	generator.add(Activation(config.nonlinearity))
+	generator.add(Activation(config.nonlinearity_g))
 	generator.add(PixelShuffler2D(channels, channels, r=2))
 	# generator.add(BatchNormalization(channels))
-	generator.add(Activation(config.nonlinearity))
+	generator.add(Activation(config.nonlinearity_g))
 	generator.add(PixelShuffler2D(channels, channels, r=2))
 	# generator.add(BatchNormalization(channels))
-	generator.add(Activation(config.nonlinearity))
+	generator.add(Activation(config.nonlinearity_g))
 	generator.add(PixelShuffler2D(channels, 3, r=2))
-
-	# Generator
-	decoder = Sequential()
-	decoder.add(Linear(ndim_z, channels * projection_size ** 2))
-	# decoder.add(BatchNormalization(channels * projection_size ** 2))
-	decoder.add(reshape((-1, channels, projection_size, projection_size)))
-	decoder.add(PixelShuffler2D(channels, channels, r=2))
-	# decoder.add(BatchNormalization(channels))
-	decoder.add(Activation(config.nonlinearity))
-	decoder.add(PixelShuffler2D(channels, channels, r=2))
-	# decoder.add(BatchNormalization(channels))
-	decoder.add(Activation(config.nonlinearity))
-	decoder.add(PixelShuffler2D(channels, channels, r=2))
-	# decoder.add(BatchNormalization(channels))
-	decoder.add(Activation(config.nonlinearity))
-	decoder.add(PixelShuffler2D(channels, 3, r=2))
 
 	params = {
 		"config": config.to_dict(),

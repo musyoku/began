@@ -45,7 +45,8 @@ class Config(Params):
 		self.ndim_z = 50
 		self.weight_std = 0.001
 		self.weight_initializer = "Normal"		# Normal, GlorotNormal or HeNormal
-		self.nonlinearity = "elu"
+		self.nonlinearity_d = "leaky_relu"
+		self.nonlinearity_g = "relu"
 		self.optimizer = "adam"
 		self.learning_rate = 0.0001
 		self.momentum = 0.5
