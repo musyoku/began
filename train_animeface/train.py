@@ -49,8 +49,8 @@ def main():
 			images_real = sample_from_data(images, batchsize)
 			images_fake = began.generate_x(batchsize)
 
-			loss_real = began.compute_loss(samples_real)
-			loss_fake = began.compute_loss(samples_fake)
+			loss_real = began.compute_loss(images_real)
+			loss_fake = began.compute_loss(images_fake)
 
 			loss_d = loss_real - kt * loss_fake
 			loss_g = loss_fake
