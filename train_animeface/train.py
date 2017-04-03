@@ -40,6 +40,8 @@ def main():
 	kt = 0
 	lambda_k = 0.001 
 	progress = Progress()
+	sum_loss_real_over_epoch = 0
+	sum_loss_fake_over_epoch = 0
 	for epoch in xrange(1, max_epoch + 1):
 		progress.start_epoch(epoch, max_epoch)
 		sum_loss_d = 0
