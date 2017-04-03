@@ -1,35 +1,32 @@
 import numpy as np
-import os, sys, time
+import os, sys, time, math
 from chainer import cuda
 from chainer import functions as F
 sys.path.append(os.path.split(os.getcwd())[0])
+import sampler
 from progress import Progress
 from model import params, began
 from args import args
-from dataset import load_rgb_images
-from plot import plot
+from plot import plot_kde, plot_scatter
 
-def sample_from_data(images, batchsize):
-	example = images[0]
-	height = example.shape[1]
-	width = example.shape[2]
-	x_batch = np.empty((batchsize, 3, height, width), dtype=np.float32)
-	indices = np.random.choice(np.arange(len(images), dtype=np.int32), size=batchsize, replace=True)
-	for j in range(batchsize):
-		data_index = indices[j]
-		x_batch[j] = images[data_index]
-	return x_batch
+def plot_samples(epoch, progress):
+	samples_fake = began.generate_x(10000, from_gaussian=True)
+	samples_fake.unchain_backward()
+	samples_fake = began.to_numpy(samples_fake)
+	try:
+		plot_scatter(samples_fake, dir=args.plot_dir, filename="scatter_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
+		plot_kde(samples_fake, dir=args.plot_dir, filename="kde_epoch_{}_time_{}min".format(epoch, progress.get_total_time()))
+	except:
+		pass
 
 def main():
-	images = load_rgb_images(args.image_dir)
-
-	config = began.config
-
 	# settings
-	max_epoch = 1000
+	max_epoch = 200
 	num_updates_per_epoch = 500
-	batchsize = 128
 	plot_interval = 5
+	batchsize = 100
+	scale = 2.0
+	config = began.config
 
 	# seed
 	np.random.seed(args.seed)
@@ -37,7 +34,10 @@ def main():
 		cuda.cupy.random.seed(args.seed)
 
 	# training
+	kt = 0
+	lambda_k = 0.001 
 	progress = Progress()
+	plot_samples(0, progress)
 	for epoch in xrange(1, max_epoch + 1):
 		progress.start_epoch(epoch, max_epoch)
 		sum_loss_d = 0
@@ -46,8 +46,8 @@ def main():
 
 		for t in xrange(num_updates_per_epoch):
 			# sample data
-			images_real = sample_from_data(images, batchsize)
-			images_fake = began.generate_x(batchsize)
+			samples_real = sampler.gaussian_mixture_circle(batchsize, config.num_mixture, scale=scale, std=0.2)
+			samples_fake = began.generate_x(batchsize)
 
 			loss_real = began.compute_loss(samples_real)
 			loss_fake = began.compute_loss(samples_fake)
@@ -81,7 +81,7 @@ def main():
 		})
 
 		if epoch % plot_interval == 0 or epoch == 1:
-			plot(filename="epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
+			plot_samples(epoch, progress)
 
 if __name__ == "__main__":
 	main()

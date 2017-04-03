@@ -15,9 +15,7 @@ try:
 except:
 	pass
 
-# specify discriminator
 sequence_filename = args.model_dir + "/model.json"
-
 if os.path.isfile(sequence_filename):
 	print "loading", sequence_filename
 	with open(sequence_filename, "r") as f:
@@ -37,7 +35,7 @@ else:
 	config.weight_initializer = "Normal"
 	config.nonlinearity = "elu"
 	config.optimizer = "adam"
-	config.learning_rate = 0.001
+	config.learning_rate = 0.0001
 	config.momentum = 0.5
 	config.gradient_clipping = 1
 	config.weight_decay = 0

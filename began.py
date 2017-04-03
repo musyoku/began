@@ -56,32 +56,36 @@ class BEGAN():
 	def __init__(self, params):
 		self.params = copy.deepcopy(params)
 		self.config = to_object(params["config"])
-		self.chain = sequential.chain.Chain(weight_initializer=self.config.weight_initializer, weight_std=self.config.weight_std)
+		self.chain_discriminator = sequential.chain.Chain(weight_initializer=self.config.weight_initializer, weight_std=self.config.weight_std)
+		self.chain_generator = sequential.chain.Chain(weight_initializer=self.config.weight_initializer, weight_std=self.config.weight_std)
 
 		# add decoder
 		decoder = sequential.from_dict(self.params["decoder"])
-		self.chain.add_sequence_with_name(decoder, "decoder")
+		self.chain_discriminator.add_sequence_with_name(decoder, "decoder")
 		self.decoder = decoder
 
 		# add encoder
 		encoder = sequential.from_dict(self.params["encoder"])
-		self.chain.add_sequence_with_name(encoder, "encoder")
+		self.chain_discriminator.add_sequence_with_name(encoder, "encoder")
 		self.encoder = encoder
 
 		# add generator
 		generator = sequential.from_dict(self.params["generator"])
-		self.chain.add_sequence_with_name(generator, "generator")
+		self.chain_generator.add_sequence_with_name(generator, "generator")
 		self.generator = generator
 
 		# setup optimizer
-		self.chain.setup_optimizers(self.config.optimizer, self.config.learning_rate, self.config.momentum)
+		self.chain_discriminator.setup_optimizers(self.config.optimizer, self.config.learning_rate, self.config.momentum)
+		self.chain_generator.setup_optimizers(self.config.optimizer, self.config.learning_rate, self.config.momentum)
 		self._gpu = False
 
 	def update_learning_rate(self, lr):
-		self.chain.update_learning_rate(lr)
+		self.chain_discriminator.update_learning_rate(lr)
+		self.chain_generator.update_learning_rate(lr)
 
 	def to_gpu(self):
-		self.chain.to_gpu()
+		self.chain_discriminator.to_gpu()
+		self.chain_generator.to_gpu()
 		self._gpu = True
 
 	@property
@@ -148,13 +152,17 @@ class BEGAN():
 		return F.mean_absolute_error(x, _x)
 		# return F.mean_squared_error(x, _x)
 
-	def backprop(self, loss):
-		self.chain.backprop(loss)
+	def backprop_discriminator(self, loss):
+		self.chain_discriminator.backprop(loss)
+
+	def backprop_generator(self, loss):
+		self.chain_generator.backprop(loss)
 
 	def load(self, model_dir=None):
 		if model_dir is None:
 			raise Exception()
-		self.chain.load(model_dir + "/model.hdf5")
+		self.chain_discriminator.load(model_dir + "/discriminator.hdf5")
+		self.chain_generator.load(model_dir + "/generator.hdf5")
 
 	def save(self, model_dir=None):
 		if model_dir is None:
@@ -163,4 +171,5 @@ class BEGAN():
 			os.mkdir(model_dir)
 		except:
 			pass
-		self.chain.save(model_dir + "/model.hdf5")
+		self.chain_discriminator.save(model_dir + "/chain_discriminator.hdf5")
+		self.chain_generator.save(model_dir + "/generator.hdf5")
