@@ -91,8 +91,6 @@ def main():
 			M = loss_real + abs(gamma * loss_real - loss_fake)
 			sum_M += M
 
-			print loss_real, loss_fake
-
 			if t % 10 == 0:
 				progress.show(t, num_updates_per_epoch, {})
 
