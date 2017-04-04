@@ -42,6 +42,7 @@ class Params():
 
 class Config(Params):
 	def __init__(self):
+		self.gamma = 0.5
 		self.ndim_z = 50
 		self.weight_std = 0.001
 		self.weight_initializer = "Normal"		# Normal, GlorotNormal or HeNormal
@@ -143,10 +144,10 @@ class BEGAN():
 		x = self.to_variable(x)
 		return self.decoder(x, test=test)
 
-	def compute_loss(self, x):
+	def compute_loss(self, x, test=False):
 		x = self.to_variable(x)
-		z = self.encode(x)
-		_x = self.decode(z)
+		z = self.encode(x, test=test)
+		_x = self.decode(z, test=test)
 		return F.mean_absolute_error(x, _x)
 		# return F.mean_squared_error(x, _x)
 

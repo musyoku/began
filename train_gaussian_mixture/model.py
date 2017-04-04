@@ -26,8 +26,9 @@ if os.path.isfile(sequence_filename):
 			raise Exception("could not load {}".format(sequence_filename))
 else:
 	config = Config()
+	config.gamma = 0.5
 	config.num_mixture = args.num_mixture
-	config.ndim_z = 50
+	config.ndim_z = 256
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
 	config.nonlinearity_d = "leaky_relu"

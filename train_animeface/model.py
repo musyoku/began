@@ -29,6 +29,7 @@ else:
 	ndim_z = 50
 
 	config = Config()
+	config.gamma = 0.5
 	config.ndim_z = ndim_z
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
