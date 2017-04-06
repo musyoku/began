@@ -34,8 +34,8 @@ else:
 	config.nonlinearity_d = "leaky_relu"
 	config.nonlinearity_g = "relu"
 	config.optimizer = "adam"
-	config.learning_rate = 0.0001
-	config.momentum = 0.1
+	config.learning_rate = 0.00001
+	config.momentum = 0.9
 	config.gradient_clipping = 1
 	config.weight_decay = 0
 

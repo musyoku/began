@@ -91,6 +91,7 @@ def main():
 		progress.show(num_updates_per_epoch, num_updates_per_epoch, {
 			"loss_d": sum_loss_d / num_updates_per_epoch,
 			"loss_g": sum_loss_g / num_updates_per_epoch,
+			"k": kt,
 			"M": sum_M / num_updates_per_epoch,
 		})
 
