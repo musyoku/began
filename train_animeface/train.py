@@ -7,7 +7,7 @@ from progress import Progress
 from model import params, began
 from args import args
 from dataset import load_rgb_images
-from plot import plot_generator_outputs
+from plot import plot_generator_outputs, plot_autoencoder_outputs
 
 def sample_from_data(images, batchsize):
 	example = images[0]
@@ -26,7 +26,7 @@ def main():
 
 	# settings
 	max_epoch = 1000
-	num_updates_per_epoch = 500
+	num_updates_per_epoch = 5
 	batchsize = 128
 	plot_interval = 5
 
@@ -86,7 +86,8 @@ def main():
 		})
 
 		if epoch % plot_interval == 0 or epoch == 1:
-			plot_generator_outputs(filename="epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
+			plot_generator_outputs(filename="generator_epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
+			plot_autoencoder_outputs(filename="autoencoder_epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
 
 if __name__ == "__main__":
 	main()

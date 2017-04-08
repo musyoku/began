@@ -37,14 +37,16 @@ def plot_autoencoder_outputs(filename="autoencoder"):
 		pass
 	images = load_rgb_images(args.image_dir)
 	x_true = sample_from_data(images, 100)
+	z_true = began.encode(x_true, test=True)
+	x_true = began.to_numpy(began.decode(z_true, test=True))
 	x_true = (x_true + 1.0) / 2.0
-	tile_rgb_images(x.transpose(0, 2, 3, 1), dir=args.plot_dir, filename="{}_real".format(filename))
+	tile_rgb_images(x_true.transpose(0, 2, 3, 1), dir=args.plot_dir, filename="{}_real".format(filename))
 
 	x_fake = began.generate_x(100, test=True, as_numpy=True)
-	z_fake = self.encode(x, test=True)
-	x_fake = self.decode(z_fake, test=True)
+	z_fake = began.encode(x_fake, test=True)
+	x_fake = began.to_numpy(began.decode(z_fake, test=True))
 	x_fake = (x_fake + 1.0) / 2.0
-	tile_rgb_images(x.transpose(0, 2, 3, 1), dir=args.plot_dir, filename="{}_gen".format(filename))
+	tile_rgb_images(x_fake.transpose(0, 2, 3, 1), dir=args.plot_dir, filename="{}_gen".format(filename))
 
 def sample_from_data(images, batchsize):
 	example = images[0]
