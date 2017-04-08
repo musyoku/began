@@ -30,12 +30,11 @@ def plot_generator_outputs(filename="generator"):
 	x = (x + 1.0) / 2.0
 	tile_rgb_images(x.transpose(0, 2, 3, 1), dir=args.plot_dir, filename=filename)
 
-def plot_autoencoder_outputs(filename="autoencoder"):
+def plot_autoencoder_outputs(images, filename="autoencoder"):
 	try:
 		os.mkdir(args.plot_dir)
 	except:
 		pass
-	images = load_rgb_images(args.image_dir)
 	x_true = sample_from_data(images, 100)
 	z_true = began.encode(x_true, test=True)
 	x_true = began.to_numpy(began.decode(z_true, test=True))

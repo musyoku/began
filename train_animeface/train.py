@@ -26,7 +26,7 @@ def main():
 
 	# settings
 	max_epoch = 1000
-	num_updates_per_epoch = 5
+	num_updates_per_epoch = 500
 	batchsize = 128
 	plot_interval = 5
 
@@ -87,7 +87,7 @@ def main():
 
 		if epoch % plot_interval == 0 or epoch == 1:
 			plot_generator_outputs(filename="generator_epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
-			plot_autoencoder_outputs(filename="autoencoder_epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
+			plot_autoencoder_outputs(images, filename="autoencoder_epoch_{}_time_{}_min".format(epoch, progress.get_total_time()))
 
 if __name__ == "__main__":
 	main()
