@@ -44,6 +44,7 @@ class Config(Params):
 	def __init__(self):
 		self.gamma = 0.5
 		self.ndim_z = 50
+		self.ndim_h = 50
 		self.weight_std = 0.001
 		self.weight_initializer = "Normal"		# Normal, GlorotNormal or HeNormal
 		self.nonlinearity_d = "leaky_relu"

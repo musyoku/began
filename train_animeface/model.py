@@ -27,10 +27,12 @@ else:
 	image_width = 96
 	image_height = image_width
 	ndim_z = 50
+	ndim_h = 1024
 
 	config = Config()
 	config.gamma = 0.5
 	config.ndim_z = ndim_z
+	config.ndim_h = ndim_h
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
 	config.nonlinearity_d = "leaky_relu"
@@ -55,15 +57,15 @@ else:
 	encoder.add(Convolution2D(128, 256, ksize=4, stride=2, pad=1))
 	encoder.add(BatchNormalization(256))
 	encoder.add(Activation(config.nonlinearity_d))
-	encoder.add(Linear(None, ndim_z))
+	encoder.add(Linear(None, ndim_h))z
 	encoder.add(Activation(config.nonlinearity_d))
 
 	projection_size = 6
 
 	# Decoder
 	decoder = Sequential()
-	decoder.add(BatchNormalization(ndim_z))
-	decoder.add(Linear(ndim_z, 512 * projection_size ** 2))
+	decoder.add(BatchNormalization(ndim_h))
+	decoder.add(Linear(ndim_h, 512 * projection_size ** 2))
 	decoder.add(Activation(config.nonlinearity_g))
 	decoder.add(BatchNormalization(512 * projection_size ** 2))
 	decoder.add(reshape((-1, 512, projection_size, projection_size)))

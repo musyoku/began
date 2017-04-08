@@ -29,6 +29,7 @@ else:
 	config.gamma = 0.5
 	config.num_mixture = args.num_mixture
 	config.ndim_z = 256
+	config.ndim_h = 32
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
 	config.nonlinearity_d = "leaky_relu"
@@ -46,10 +47,10 @@ else:
 	encoder.add(Linear(None, 128))
 	encoder.add(Activation(config.nonlinearity_d))
 	# encoder.add(BatchNormalization(128))
-	encoder.add(Linear(None, config.ndim_z))
+	encoder.add(Linear(None, config.ndim_h))
 
 	decoder = Sequential()
-	decoder.add(Linear(config.ndim_z, 128))
+	decoder.add(Linear(config.ndim_h, 128))
 	decoder.add(Activation(config.nonlinearity_d))
 	# decoder.add(BatchNormalization(128))
 	decoder.add(Linear(None, 128))
