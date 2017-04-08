@@ -57,7 +57,7 @@ else:
 	encoder.add(Convolution2D(128, 256, ksize=4, stride=2, pad=1))
 	encoder.add(BatchNormalization(256))
 	encoder.add(Activation(config.nonlinearity_d))
-	encoder.add(Linear(None, ndim_h))z
+	encoder.add(Linear(None, ndim_h))
 	encoder.add(Activation(config.nonlinearity_d))
 
 	projection_size = 6
