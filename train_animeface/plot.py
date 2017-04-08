@@ -21,7 +21,7 @@ def tile_rgb_images(x, dir=None, filename="x", row=10, col=10):
 		pylab.axis("off")
 	pylab.savefig("{}/{}.png".format(dir, filename))
 
-def plot(filename="gen"):
+def plot_generator_outputs(filename="fake"):
 	try:
 		os.mkdir(args.plot_dir)
 	except:
@@ -41,16 +41,16 @@ def sample_from_data(images, batchsize):
 		x_batch[j] = images[data_index]
 	return x_batch
 
-def plot_original_data(filename="data"):
+def plot_original_data(filename="real"):
 	try:
 		os.mkdir(args.plot_dir)
 	except:
 		pass
-
 	images = load_rgb_images(args.image_dir)
 	x_true = sample_from_data(images, 100)
 	x_true = (x_true + 1.0) / 2.0
 	tile_rgb_images(x_true.transpose(0, 2, 3, 1), dir=args.plot_dir, filename=filename)
 
 if __name__ == '__main__':
-	plot()
+	plot_original_data()
+	plot_generator_outputs()
