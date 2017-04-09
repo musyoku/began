@@ -35,7 +35,7 @@ def main():
 	max_epoch = 200
 	num_updates_per_epoch = 500
 	plot_interval = 5
-	batchsize = 100
+	batchsize = 256
 	scale = 2.0
 	config = began.config
 

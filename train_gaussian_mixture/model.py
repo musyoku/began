@@ -29,14 +29,14 @@ else:
 	config.gamma = 0.5
 	config.num_mixture = args.num_mixture
 	config.ndim_z = 256
-	config.ndim_h = 32
+	config.ndim_h = 128
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
-	config.nonlinearity_d = "leaky_relu"
-	config.nonlinearity_g = "relu"
+	config.nonlinearity_d = "elu"
+	config.nonlinearity_g = "elu"
 	config.optimizer = "adam"
 	config.learning_rate = 0.0001
-	config.momentum = 0.9
+	config.momentum = 0.1
 	config.gradient_clipping = 1
 	config.weight_decay = 0
 

@@ -35,8 +35,8 @@ else:
 	config.ndim_h = ndim_h
 	config.weight_std = 0.1
 	config.weight_initializer = "Normal"
-	config.nonlinearity_d = "leaky_relu"
-	config.nonlinearity_g = "relu"
+	config.nonlinearity_d = "elu"
+	config.nonlinearity_g = "elu"
 	config.optimizer = "adam"
 	config.learning_rate = 0.0001
 	config.momentum = 0.5
@@ -58,13 +58,13 @@ else:
 	encoder.add(BatchNormalization(256))
 	encoder.add(Activation(config.nonlinearity_d))
 	encoder.add(Linear(None, ndim_h))
-	encoder.add(Activation(config.nonlinearity_d))
+	# encoder.add(Activation(config.nonlinearity_d))
 
 	projection_size = 6
 
 	# Decoder
 	decoder = Sequential()
-	decoder.add(BatchNormalization(ndim_h))
+	# decoder.add(BatchNormalization(ndim_h))
 	decoder.add(Linear(ndim_h, 512 * projection_size ** 2))
 	decoder.add(Activation(config.nonlinearity_g))
 	decoder.add(BatchNormalization(512 * projection_size ** 2))
