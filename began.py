@@ -141,9 +141,12 @@ class BEGAN():
 		x = self.to_variable(x)
 		return self.encoder(x, test=test)
 
-	def decode(self, x, test=False):
-		x = self.to_variable(x)
-		return self.decoder(x, test=test)
+	def decode(self, z, test=False, as_numpy=False):
+		z = self.to_variable(z)
+		x = self.decoder(z, test=test)
+		if as_numpy:
+			return self.to_numpy(x)
+		return x
 
 	def compute_loss(self, x, test=False):
 		x = self.to_variable(x)

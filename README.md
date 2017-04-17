@@ -27,7 +27,7 @@ https://drive.google.com/open?id=0ByQaxyG1S5JRc28wMDNjMWp0NTA
     |   ├── discriminator.hdf5
     |   ├── generator.hdf5
     |   └── model.json
-    ├── analogy.py
+    ├── interpolate.py
     └── train.py
 ```
 

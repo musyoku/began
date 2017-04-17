@@ -36,14 +36,14 @@ def plot_autoencoder_outputs(images, filename="autoencoder"):
 	except:
 		pass
 	x_true = sample_from_data(images, 100)
-	z_true = began.encode(x_true, test=True)
-	x_true = began.to_numpy(began.decode(z_true, test=True))
+	h_true = began.encode(x_true, test=True)
+	x_true = began.to_numpy(began.decode(h_true, test=True))
 	x_true = (x_true + 1.0) / 2.0
 	tile_rgb_images(x_true.transpose(0, 2, 3, 1), dir=args.plot_dir, filename="{}_real".format(filename))
 
 	x_fake = began.generate_x(100, test=True, as_numpy=True)
-	z_fake = began.encode(x_fake, test=True)
-	x_fake = began.to_numpy(began.decode(z_fake, test=True))
+	h_fake = began.encode(x_fake, test=True)
+	x_fake = began.to_numpy(began.decode(h_fake, test=True))
 	x_fake = (x_fake + 1.0) / 2.0
 	tile_rgb_images(x_fake.transpose(0, 2, 3, 1), dir=args.plot_dir, filename="{}_gen".format(filename))
 
