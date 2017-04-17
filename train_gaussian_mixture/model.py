@@ -7,7 +7,7 @@ sys.path.append(os.path.split(os.getcwd())[0])
 from began import BEGAN, Config
 from sequential import Sequential
 from sequential.layers import Linear, BatchNormalization
-from sequential.functions import Activation
+from sequential.functions import Activation, gaussian_noise
 
 # load params.json
 try:
@@ -41,21 +41,22 @@ else:
 	config.weight_decay = 0
 
 	encoder = Sequential()
-	encoder.add(Linear(2, 128))
+	encoder.add(gaussian_noise(std=0.1))
+	encoder.add(Linear(2, 64))
 	encoder.add(Activation(config.nonlinearity_d))
-	# encoder.add(BatchNormalization(128))
-	encoder.add(Linear(None, 128))
+	# encoder.add(BatchNormalization(64))
+	encoder.add(Linear(None, 64))
 	encoder.add(Activation(config.nonlinearity_d))
-	# encoder.add(BatchNormalization(128))
+	# encoder.add(BatchNormalization(64))
 	encoder.add(Linear(None, config.ndim_h))
 
 	decoder = Sequential()
-	decoder.add(Linear(config.ndim_h, 128))
+	decoder.add(Linear(config.ndim_h, 64))
 	decoder.add(Activation(config.nonlinearity_d))
-	# decoder.add(BatchNormalization(128))
-	decoder.add(Linear(None, 128))
+	# decoder.add(BatchNormalization(64))
+	decoder.add(Linear(None, 64))
 	decoder.add(Activation(config.nonlinearity_d))
-	# decoder.add(BatchNormalization(128))
+	# decoder.add(BatchNormalization(64))
 	decoder.add(Linear(None, 2))
 
 	generator = Sequential()

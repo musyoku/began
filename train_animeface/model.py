@@ -27,13 +27,13 @@ else:
 	image_width = 96
 	image_height = image_width
 	ndim_z = 50
-	ndim_h = 1024
+	ndim_h = 2048
 
 	config = Config()
 	config.gamma = 0.5
 	config.ndim_z = ndim_z
 	config.ndim_h = ndim_h
-	config.weight_std = 0.1
+	config.weight_std = 0.01
 	config.weight_initializer = "Normal"
 	config.nonlinearity_d = "elu"
 	config.nonlinearity_g = "elu"
@@ -45,6 +45,7 @@ else:
 
 	# Discriminator
 	encoder = Sequential()
+	encoder.add(gaussian_noise(std=0.3))
 	encoder.add(Convolution2D(3, 32, ksize=4, stride=2, pad=1))
 	encoder.add(BatchNormalization(32))
 	encoder.add(Activation(config.nonlinearity_d))
@@ -58,27 +59,26 @@ else:
 	encoder.add(BatchNormalization(256))
 	encoder.add(Activation(config.nonlinearity_d))
 	encoder.add(Linear(None, ndim_h))
-	# encoder.add(Activation(config.nonlinearity_d))
 
 	projection_size = 6
 
 	# Decoder
 	decoder = Sequential()
-	# decoder.add(BatchNormalization(ndim_h))
-	decoder.add(Linear(ndim_h, 512 * projection_size ** 2))
+	decoder.add(BatchNormalization(ndim_h))
+	decoder.add(Linear(ndim_h, 256 * projection_size ** 2))
 	decoder.add(Activation(config.nonlinearity_g))
-	decoder.add(BatchNormalization(512 * projection_size ** 2))
-	decoder.add(reshape((-1, 512, projection_size, projection_size)))
-	decoder.add(PixelShuffler2D(512, 256, r=2))
-	decoder.add(BatchNormalization(256))
-	decoder.add(Activation(config.nonlinearity_d))
+	decoder.add(BatchNormalization(256 * projection_size ** 2))
+	decoder.add(reshape((-1, 256, projection_size, projection_size)))
 	decoder.add(PixelShuffler2D(256, 128, r=2))
 	decoder.add(BatchNormalization(128))
 	decoder.add(Activation(config.nonlinearity_d))
 	decoder.add(PixelShuffler2D(128, 64, r=2))
 	decoder.add(BatchNormalization(64))
 	decoder.add(Activation(config.nonlinearity_d))
-	decoder.add(PixelShuffler2D(64, 3, r=2))
+	decoder.add(PixelShuffler2D(64, 32, r=2))
+	decoder.add(BatchNormalization(32))
+	decoder.add(Activation(config.nonlinearity_d))
+	decoder.add(PixelShuffler2D(32, 3, r=2))
 
 	# Generator
 	generator = Sequential()

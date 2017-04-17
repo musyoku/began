@@ -26,8 +26,8 @@ def main():
 
 	# settings
 	max_epoch = 1000
-	num_updates_per_epoch = 500
-	batchsize = 128
+	batchsize = 16
+	num_updates_per_epoch = int(len(images) / batchsize)
 	plot_interval = 5
 
 	# seed
