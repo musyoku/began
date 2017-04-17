@@ -7,6 +7,10 @@
 
 - Chainer
 
+## Mixture of Gaussians Dataset
+
+![image](https://github.com/musyoku/musyoku.github.io/blob/master/images/post/2017-04-16/gaussian.png?raw=true)
+
 ## Animeface Dataset
 
 ### Generator output (96x96)
