@@ -30,3 +30,7 @@ https://drive.google.com/open?id=0ByQaxyG1S5JRc28wMDNjMWp0NTA
     ├── analogy.py
     └── train.py
 ```
+
+### Mode collapse
+
+![image](https://github.com/musyoku/musyoku.github.io/blob/master/images/post/2017-04-16/mode_collapse_2.png?raw=true)
